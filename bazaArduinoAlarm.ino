@@ -53,6 +53,7 @@ char key;
 char newKey;
 boolean ifAlarmTriggered = false;
 boolean startTiming = false;
+
 unsigned long previosTime;
 unsigned long currentTime;
 
@@ -67,7 +68,7 @@ void loop() {
   dhtTemp = dht.getTemperature();
 
   if (ifArmed) { // jeżeli alarm jest uzbrojony, można wpisać tylko hasło do wyłączenia
-    if (Serial.available() > 0) { // Wyłączenie alarmu po wypisaniu hasła
+    if (Serial.available() > 0) {
       lcd.on();
       newKey = Serial.read();
       if (newKey != '#') {
@@ -106,11 +107,11 @@ void loop() {
       previosTime = millis();
     }
 
-    if(valFrontSensor != 0){
+    if(valFrontSensor < 1000){
       startTiming = true;
     }
 
-    if(valBackSensor != 0){
+    if(valBackSensor < 1000){
       ifAlarmTriggered = true;
       backSensorTriggered();
     }
@@ -118,7 +119,7 @@ void loop() {
     //triger ruchu
 
     if(startTiming){
-      if(currentTime - previosTime >= 10000){ //Wait 10sec when front sensor trigger until alarm siren on 
+      if(currentTime - previosTime >= 5000){ //Wait 10sec when front sensor trigger until alarm siren on 
         ifAlarmTriggered = true;
         frontSensorTriggered();
       }
@@ -134,7 +135,7 @@ void loop() {
         setCursorLCD("Temperatura " + String(dhtTemp),"Wilgotność " + String(dhtHumidity));
         delay(3000);
         lcd.clear();
-        lcd.disable();
+        lcd.off();
 
       } else if (key == 'B') {
         //print battery on lcd
@@ -173,14 +174,14 @@ void armAlarm() {  // Alarm włączony, funkcje zablokowane (jedynie opcja wpisa
         lcd.setCursor(0,1);
         }
 
-    ifArmed = true; 
+    
     setCursorLCD("Alarm uzbrojony","Haslo:");
     delay(4000);
     lcd.off();
-    previosTime = 0;
-    currentTime = 0;
+    ifArmed = true; 
     startTiming = false;
     ifAlarmTriggered = false;
+    
    
 }
 
@@ -194,8 +195,9 @@ String convertToString(char* a, int size){
 }
 
 void disArmAlarm() {
-  ifArmed = false;
-  ifAlarmTriggered = false;
+    ifArmed = false; 
+    startTiming = false;
+    ifAlarmTriggered = false;  
   
   setCursorLCD("Alarn rozbrojony",String(dhtTemp));
   digitalWrite(pinSiren, LOW); 
