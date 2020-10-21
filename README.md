@@ -1,5 +1,3 @@
-# ATmega-328P---simple-alarm-system-with-SMS
-
 # How it works?
 While alarm is arming, user can only write passwd for unarming. 
 
