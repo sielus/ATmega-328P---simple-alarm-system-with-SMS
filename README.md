@@ -18,4 +18,4 @@ However, if the alarm detects :
 ## Schema
 ![Schema](https://i.postimg.cc/4dyqrHsM/1.png)
 
-*I'm not a professional C programmer but I hope, code is not worst looking!*
+*I'm not a professional C programmer but I hope, code is not looking too bad!*
